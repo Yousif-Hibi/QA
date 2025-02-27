@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="he">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Abook</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        .header {
+            background-color: #1877f2;
+            color: white;
+            padding: 15px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .container {
+            width: 50%;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-box input,
+        .new-post input,
+        .new-post textarea {
+            width: 90%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .login-box button,
+        .new-post button {
+            width: 100%;
+            padding: 12px;
+            background-color: #1877f2;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .post {
+            border-bottom: 1px solid #ddd;
+            padding: 15px 0;
+            text-align: left;
+        }
+
+        .post img {
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        .actions {
+            margin-top: 10px;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .like {
+            background-color: #4267B2;
+            color: white;
+        }
+
+        .comment {
+            background-color: #42b72a;
+            color: white;
+        }
+
+        .share {
+            background-color: #f5b400;
+            color: white;
+        }
+
+        .comments {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">Face Abook</div>
+
+    <!-- טופס הרשמה -->
+    <div class="container" id="signup-page">
+        <div class="login-box">
+            <input type="text" id="signupName" placeholder="שם מלא">
+            <input type="text" id="signupEmail" placeholder="אימייל">
+            <input type="password" id="signupPassword" placeholder="סיסמה">
+            <button onclick="signup()">הירשם</button>
+        </div>
+        <p>כבר יש לך חשבון? <a href="#" onclick="showLoginPage()">התחבר כאן</a></p>
+    </div>
+
+    <!-- טופס התחברות -->
+    <div class="container" id="login-page" style="display: none;">
+        <div class="login-box">
+            <input type="text" id="loginEmail" placeholder="אימייל או מספר טלפון">
+            <input type="password" id="loginPassword" placeholder="סיסמה">
+            <button onclick="login()">התחבר</button>
+        </div>
+        <p>אין לך חשבון? <a href="#" onclick="showSignupPage()">הירשם כאן</a></p>
+    </div>
+
+    <div class="container" id="home-page" style="display: none;">
+        <div class="new-post">
+            <textarea id="postContent" placeholder="מה אתה חושב?"></textarea>
+            <input type="file" id="postImage" accept="image/*">
+            <button onclick="addPost()">פרסם</button>
+        </div>
+        <div id="posts">
+            <div class="post">
+                <p><strong>משתמש א'</strong>: איזה יום נפלא!</p>
+                <img src="https://www.w3schools.com/w3images/lights.jpg" alt="תמונה לפוסט">
+                <div class="actions">
+                    <button class="btn like" onclick="likePost(this)">לייק</button>
+                    <button class="btn comment" onclick="toggleComments(this)">תגובה</button>
+                    <button class="btn share" onclick="sharePost()">שיתוף</button>
+                </div>
+                <div class="comments" style="display: none;">
+                    <input type="text" placeholder="כתוב תגובה..." id="commentInput"
+                        onkeypress="addComment(event, this)">
+                    <button class="btn" onclick="addCommentButton(this)">פרסם תגובה</button>
+                    <div class="comment-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let users = [];
+
+        function showSignupPage() {
+            document.getElementById("signup-page").style.display = "block";
+            document.getElementById("login-page").style.display = "none";
+        }
+
+        function showLoginPage() {
+            document.getElementById("login-page").style.display = "block";
+            document.getElementById("signup-page").style.display = "none";
+        }
+
+        function signup() {
+            const name = document.getElementById("signupName").value.trim();
+            const email = document.getElementById("signupEmail").value.trim();
+            const password = document.getElementById("signupPassword").value.trim();
+
+            if (!name || !email || !password) {
+                alert("כל השדות חייבים להיות מלאים!");
+                return;
+            }
+
+            const user = { name, email, password };
+            users.push(user);
+            alert("ההרשמה הצליחה! עכשיו תוכל להתחבר.");
+            showLoginPage();
+        }
+
+        function login() {
+            const email = document.getElementById("loginEmail").value.trim();
+            const password = document.getElementById("loginPassword").value.trim();
+
+            const user = users.find(user => user.email === email && user.password === password);
+
+            if (user) {
+                alert("התחברת בהצלחה!");
+                showHomePage();
+            } else {
+                alert("אימייל או סיסמה שגויים.");
+            }
+        }
+
+        function showHomePage() {
+            document.getElementById("login-page").style.display = "none";
+            document.getElementById("home-page").style.display = "block";
+        }
+
+        function likePost(button) {
+            if (button.innerText === "לייק") {
+                button.innerText = "אהבתי";
+            } else {
+                button.innerText = "לייק";
+            }
+        }
+
+        function toggleComments(button) {
+            let commentSection = button.parentElement.nextElementSibling;
+            commentSection.style.display = commentSection.style.display === "none" ? "block" : "none";
+        }
+
+        function addComment(event, input) {
+            if (event.key === "Enter") {
+                let commentText = input.value.trim();
+                if (commentText !== "") {
+                    let commentList = input.nextElementSibling;
+                    let newComment = document.createElement("p");
+                    newComment.textContent = commentText;
+                    commentList.appendChild(newComment);
+                    input.value = "";
+                }
+            }
+        }
+
+        function addCommentButton(button) {
+            let input = button.previousElementSibling;
+            let commentText = input.value.trim();
+            if (commentText !== "") {
+                let commentList = input.nextElementSibling;
+                let newComment = document.createElement("p");
+                newComment.textContent = commentText;
+                commentList.appendChild(newComment);
+                input.value = "";
+            }
+        }
+
+        function addPost() {
+            let content = document.getElementById("postContent").value.trim();
+            let fileInput = document.getElementById("postImage");
+            let postsContainer = document.getElementById("posts");
+
+            if (content === "") {
+                alert("אי אפשר לפרסם פוסט ריק!");
+                return;
+            }
+
+            let newPost = document.createElement("div");
+            newPost.classList.add("post");
+            newPost.innerHTML = `<p><strong>אתה</strong>: ${content}</p>`;
+
+            if (fileInput.files.length > 0) {
+                let img = document.createElement("img");
+                img.src = URL.createObjectURL(fileInput.files[0]);
+                img.alt = "תמונה לפוסט";
+                newPost.appendChild(img);
+            }
+
+            newPost.innerHTML += `
+                <div class="actions">
+                    <button class="btn like" onclick="likePost(this)">לייק</button>
+                    <button class="btn comment" onclick="toggleComments(this)">תגובה</button>
+                    <button class="btn share" onclick="sharePost()">שיתוף</button>
+                </div>
+                <div class="comments" style="display: none;">
+                    <input type="text" placeholder="כתוב תגובה..." onkeypress="addComment(event, this)">
+                    <button class="btn" onclick="addCommentButton(this)">פרסם תגובה</button>
+                    <div class="comment-list"></div>
+                </div>
+            `;
+            postsContainer.prepend(newPost);
+            document.getElementById("postContent").value = "";
+            fileInput.value = "";
+        }
+
+        function sharePost() {
+            alert("הפוסט שותף בהצלחה!");
+        }
+    </script>
+</body>
+
+</html>
