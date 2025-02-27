@@ -1,0 +1,1 @@
+This repository houses a collection of different Quality Assurance (QA) projects. Each project focuses on testing and ensuring the quality of various software components and systems. Below is a brief description of each project, along with setup instructions and any specific details you need to know for running or contributing to these projects.
