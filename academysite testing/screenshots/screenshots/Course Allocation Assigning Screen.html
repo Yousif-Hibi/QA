@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Allocation</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f8ff;
+        }
+        .container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .container h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            font-size: 16px;
+            margin-bottom: 10px;
+            display: block;
+            color: #555;
+        }
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        .form-group select:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+        .assign-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .assign-btn:hover {
+            background-color: #45a049;
+        }
+        .assigned-courses {
+            margin-top: 30px;
+        }
+        .assigned-course {
+            padding: 15px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .assigned-course span {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Course Allocation</h2>
+
+        <!-- Course Allocation Form -->
+        <div class="form-group">
+            <label for="selectLecturer">Select Lecturer</label>
+            <select id="selectLecturer">
+                <option value="">Select Lecturer</option>
+                <option value="lecturer1">Alice Johnson</option>
+                <option value="lecturer2">Bob Smith</option>
+                <option value="lecturer3">Charlie Brown</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="selectCourse">Select Course</label>
+            <select id="selectCourse">
+                <option value="">Select Course</option>
+                <option value="course1">Introduction to Computer Science</option>
+                <option value="course2">Data Structures and Algorithms</option>
+                <option value="course3">Web Development</option>
+            </select>
+        </div>
+
+        <button class="assign-btn" onclick="assignCourse()">Assign Course</button>
+
+        <!-- Display assigned courses -->
+        <div class="assigned-courses" id="assignedCourses">
+            <!-- Assigned courses will be listed here -->
+        </div>
+    </div>
+
+    <script>
+        const assignedCourses = [];
+
+        // Function to assign a course to a lecturer
+        function assignCourse() {
+            const lecturerSelect = document.getElementById("selectLecturer");
+            const courseSelect = document.getElementById("selectCourse");
+
+            const lecturer = lecturerSelect.value;
+            const course = courseSelect.value;
+
+            if (lecturer && course) {
+                // Create a new assignment entry
+                const assignment = {
+                    lecturer: getLecturerName(lecturer),
+                    course: getCourseName(course)
+                };
+
+                // Add the assignment to the list
+                assignedCourses.push(assignment);
+
+                // Update the display of assigned courses
+                displayAssignedCourses();
+
+                // Clear selections
+                lecturerSelect.value = "";
+                courseSelect.value = "";
+            } else {
+                alert("Please select both a lecturer and a course.");
+            }
+        }
+
+        // Function to get the lecturer's name based on the ID
+        function getLecturerName(lecturerId) {
+            const lecturers = {
+                "lecturer1": "Alice Johnson",
+                "lecturer2": "Bob Smith",
+                "lecturer3": "Charlie Brown"
+            };
+            return lecturers[lecturerId] || "Unknown Lecturer";
+        }
+
+        // Function to get the course name based on the ID
+        function getCourseName(courseId) {
+            const courses = {
+                "course1": "Introduction to Computer Science",
+                "course2": "Data Structures and Algorithms",
+                "course3": "Web Development"
+            };
+            return courses[courseId] || "Unknown Course";
+        }
+
+        // Function to display the assigned courses
+        function displayAssignedCourses() {
+            const assignedCoursesDiv = document.getElementById("assignedCourses");
+            assignedCoursesDiv.innerHTML = ""; // Clear the current list
+
+            assignedCourses.forEach((assignment, index) => {
+                const courseDiv = document.createElement("div");
+                courseDiv.classList.add("assigned-course");
+
+                courseDiv.innerHTML = `
+                    <span>${assignment.lecturer}</span> is assigned to <strong>${assignment.course}</strong>
+                    <button onclick="removeAssignment(${index})">Remove</button>
+                `;
+                assignedCoursesDiv.appendChild(courseDiv);
+            });
+        }
+
+        // Function to remove an assignment from the list
+        function removeAssignment(index) {
+            assignedCourses.splice(index, 1);
+            displayAssignedCourses(); // Refresh the list
+        }
+    </script>
+
+</body>
+</html>

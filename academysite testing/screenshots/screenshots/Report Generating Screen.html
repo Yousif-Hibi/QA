@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Generation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        select, input, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Generate Report</h2>
+
+    <!-- Report Type Selection -->
+    <div class="form-group">
+        <label for="reportType">Choose Report Type:</label>
+        <select id="reportType">
+            <option value="studentReport">Student Reports</option>
+            <option value="paymentReport">Payments</option>
+            <option value="gradeReport">Grades</option>
+        </select>
+    </div>
+
+    <!-- Time Range Selection -->
+    <div class="form-group">
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate">
+
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate">
+    </div>
+
+    <!-- Generate Report Button -->
+    <button onclick="generateReport()">Generate Report</button>
+</div>
+
+<script>
+    function generateReport() {
+        const reportType = document.getElementById('reportType').value;
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
+
+        if (reportType && startDate && endDate) {
+            alert(`Generating ${reportType} from ${startDate} to ${endDate}.`);
+            // Logic to generate the report goes here
+        } else {
+            alert('Please select report type and time range.');
+        }
+    }
+</script>
+
+</body>
+</html>

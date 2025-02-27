@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Report</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        .chart-container {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Attendance Report</h2>
+
+    <!-- Attendance Data Table -->
+    <table>
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Attendance Trend</th>
+            </tr>
+        </thead>
+        <tbody id="attendanceTableBody">
+            <!-- Rows will be populated with JavaScript -->
+        </tbody>
+    </table>
+
+    <!-- Chart Container -->
+    <div class="chart-container">
+        <canvas id="attendanceChart"></canvas>
+    </div>
+</div>
+
+<script>
+    // Sample data of students and their attendance trends over time (e.g., monthly)
+    const students = [
+        { name: 'John Doe', attendance: [90, 80, 85, 95, 88, 92] },
+        { name: 'Jane Smith', attendance: [95, 92, 96, 89, 90, 94] },
+        { name: 'Alice Johnson', attendance: [80, 85, 90, 87, 75, 82] },
+        { name: 'Bob Brown', attendance: [70, 72, 75, 78, 74, 80] },
+        { name: 'Chris Davis', attendance: [88, 85, 90, 93, 89, 91] }
+    ];
+
+    // Populate the attendance data table with data
+    const tableBody = document.getElementById('attendanceTableBody');
+    students.forEach(student => {
+        const row = `<tr>
+                        <td>${student.name}</td>
+                        <td>${student.attendance.join(', ')}</td>
+                     </tr>`;
+        tableBody.innerHTML += row;
+    });
+
+    // Prepare data for the attendance chart
+    const studentNames = students.map(student => student.name);
+    const attendanceData = students.map(student => student.attendance);
+
+    // Labels for the X-axis representing time (e.g., months or weeks)
+    const timeLabels = ['Month 1', 'Month 2', 'Month 3', 'Month 4', 'Month 5', 'Month 6'];
+
+    // Create a line chart to show attendance trends
+    const ctx = document.getElementById('attendanceChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: timeLabels,  // X-axis (time)
+            datasets: studentNames.map((name, index) => ({
+                label: name,
+                data: attendanceData[index],  // Attendance data for each student
+                borderColor: `hsl(${(index * 60) % 360}, 70%, 50%)`, // Assign different colors for each student
+                fill: false,
+                tension: 0.1
+            }))
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    title: {
+                        display: true,
+                        text: 'Attendance Percentage'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Time Period'
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

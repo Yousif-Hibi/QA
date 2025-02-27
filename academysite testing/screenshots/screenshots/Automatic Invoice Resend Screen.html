@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Resend System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            padding: 20px;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .container h2 {
+            text-align: center;
+            color: #333;
+            font-size: 2rem;
+            margin-bottom: 30px;
+        }
+        .container table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .container table th, .container table td {
+            padding: 15px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        .container table th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .status {
+            padding: 8px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .paid {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .pending {
+            background-color: #f0ad4e;
+            color: white;
+        }
+        .unpaid {
+            background-color: #d9534f;
+            color: white;
+        }
+        .send-notify-button {
+            background-color: #008CBA;
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .send-notify-button:hover {
+            background-color: #007b8b;
+        }
+        .timer {
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Student Payment Status & Invoice Resend</h2>
+
+        <!-- Payment Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Course Name</th>
+                    <th>Payment Status</th>
+                    <th>Amount Paid</th>
+                    <th>Next Reminder</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr id="student1">
+                    <td>John Doe</td>
+                    <td>Mathematics 101</td>
+                    <td class="status paid">Paid</td>
+                    <td>$500</td>
+                    <td><span id="timer1" class="timer">Next in: N/A</span></td>
+                    <td><button class="send-notify-button" onclick="resendInvoice('John Doe', 'Paid')">Resend Invoice</button></td>
+                </tr>
+                <tr id="student2">
+                    <td>Jane Smith</td>
+                    <td>Physics 101</td>
+                    <td class="status unpaid">Unpaid</td>
+                    <td>$600</td>
+                    <td><span id="timer2" class="timer">Next in: 48:00:00</span></td>
+                    <td><button class="send-notify-button" onclick="resendInvoice('Jane Smith', 'Unpaid')">Resend Invoice</button></td>
+                </tr>
+                <tr id="student3">
+                    <td>Emily Johnson</td>
+                    <td>Chemistry 101</td>
+                    <td class="status pending">Pending</td>
+                    <td>$450</td>
+                    <td><span id="timer3" class="timer">Next in: 48:00:00</span></td>
+                    <td><button class="send-notify-button" onclick="resendInvoice('Emily Johnson', 'Pending')">Resend Invoice</button></td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <script>
+        // Function to start the countdown timer for each student
+        function startTimer(studentId) {
+            const timerElement = document.getElementById(studentId);
+            let timeLeft = 48 * 60 * 60; // 48 hours in seconds
+
+            // Update the timer every second
+            const interval = setInterval(function () {
+                let hours = Math.floor(timeLeft / 3600);
+                let minutes = Math.floor((timeLeft % 3600) / 60);
+                let seconds = timeLeft % 60;
+                timerElement.textContent = `Next in: ${hours}:${minutes}:${seconds}`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(interval);
+                    // Trigger the resend invoice action when timer reaches 0
+                    resendInvoice('Jane Smith', 'Unpaid');
+                    resendInvoice('Emily Johnson', 'Pending');
+                }
+
+                timeLeft--;
+            }, 1000);
+        }
+
+        // Function to resend the invoice (simulate SMS/Email sending)
+        function resendInvoice(studentName, status) {
+            alert(`Resending invoice to ${studentName}... Status: ${status}`);
+            // Trigger email or SMS notification here
+            sendEmail(studentName, status);
+            sendSMS(studentName, status);
+        }
+
+        // Function to send Email (EmailJS)
+        function sendEmail(studentName, status) {
+            const templateParams = {
+                to_name: studentName,
+                message: `Hello ${studentName}, your payment status is ${status}. Please take action.`,
+                to_email: 'student@example.com', // Replace with actual student email
+            };
+
+            emailjs.send('your_service_id', 'your_template_id', templateParams)
+                .then((response) => {
+                    console.log('Email sent successfully:', response);
+                    alert(`Invoice sent to ${studentName} via Email.`);
+                })
+                .catch((error) => {
+                    console.log('Error sending email:', error);
+                    alert('Failed to send invoice via Email');
+                });
+        }
+
+        // Function to send SMS (Twilio)
+        function sendSMS(studentName, status) {
+            const twilioPhoneNumber = '+1XXXXXXXXXX'; // Your Twilio phone number
+
+            // Use your backend API to send an SMS with Twilio (example)
+            fetch('/send-sms', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    to: '+1234567890', // Replace with student phone
+                    message: `Hello ${studentName}, your payment status is ${status}. Please take action.`,
+                })
+            })
+            .then(response => response.json())
+            .then(data => alert(`Invoice sent to ${studentName} via SMS.`))
+            .catch(error => console.error('Error sending SMS:', error));
+        }
+
+        // Start the timers for each student (48 hours countdown)
+        window.onload = function () {
+            startTimer('timer2'); // For Jane Smith
+            startTimer('timer3'); // For Emily Johnson
+        };
+    </script>
+
+    <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
+
+</body>
+</html>

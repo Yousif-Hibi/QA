@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Login & Payment Tracking</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f8ff;
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .container h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .container .logout {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .container .logout a {
+            background-color: #d9534f;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .container .logout a:hover {
+            background-color: #c9302c;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table th,
+        table td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .status {
+            padding: 8px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .paid {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .pending {
+            background-color: #f0ad4e;
+            color: white;
+        }
+
+        .unpaid {
+            background-color: #d9534f;
+            color: white;
+        }
+
+        .action-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .action-button:hover {
+            background-color: #45a049;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .form-group input:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        .error-message {
+            color: #ff0000;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="login-container" class="container">
+        <h2>Manager Login</h2>
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" placeholder="Enter username">
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Enter password">
+        </div>
+
+        <button class="btn" onclick="login()">Login</button>
+
+        <div id="error-message" class="error-message"></div>
+    </div>
+
+    <div id="payment-container" class="container" style="display: none;">
+        <div class="logout">
+            <a href="javascript:void(0);" onclick="logout()">Logout</a>
+        </div>
+        <h2>Student Payment Tracking</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Course Name</th>
+                    <th>Payment Status</th>
+                    <th>Amount Paid</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>John Doe</td>
+                    <td>Mathematics 101</td>
+                    <td class="status paid">Paid</td>
+                    <td>$500</td>
+                    <td><button class="action-button" onclick="updateStatus(0)">Update Status</button></td>
+                </tr>
+                <tr>
+                    <td>Jane Smith</td>
+                    <td>Physics 101</td>
+                    <td class="status pending">Pending</td>
+                    <td>$600</td>
+                    <td><button class="action-button" onclick="updateStatus(1)">Update Status</button></td>
+                </tr>
+                <tr>
+                    <td>Emily Johnson</td>
+                    <td>Chemistry 101</td>
+                    <td class="status unpaid">Unpaid</td>
+                    <td>$450</td>
+                    <td><button class="action-button" onclick="updateStatus(2)">Update Status</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Example manager credentials
+        const validUsername = "admin";
+        const validPassword = "admin"; // In a real system, passwords would be hashed and stored securely
+
+        // Function to handle login
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('error-message');
+
+            // Validate credentials
+            if (username === validUsername && password === validPassword) {
+                // Hide login and show payment tracking page
+                document.getElementById('login-container').style.display = 'none';
+                document.getElementById('payment-container').style.display = 'block';
+            } else {
+                // If invalid, show an error message
+                errorMessage.textContent = "Invalid username or password.";
+            }
+        }
+
+        // Function to handle logout
+        function logout() {
+            // Show login and hide payment tracking page
+            document.getElementById('login-container').style.display = 'block';
+            document.getElementById('payment-container').style.display = 'none';
+        }
+
+        // Function to update the payment status
+        function updateStatus(studentId) {
+            const row = document.querySelectorAll('tr')[studentId + 1]; // Get the row based on studentId
+            const statusCell = row.querySelector('.status');
+            const currentStatus = statusCell.textContent.trim();
+
+            let newStatus = '';
+            if (currentStatus === 'Paid') {
+                newStatus = 'Pending';
+            } else if (currentStatus === 'Pending') {
+                newStatus = 'Unpaid';
+            } else {
+                newStatus = 'Paid';
+            }
+
+            statusCell.textContent = newStatus;
+
+            if (newStatus === 'Paid') {
+                statusCell.className = 'status paid';
+            } else if (newStatus === 'Pending') {
+                statusCell.className = 'status pending';
+            } else {
+                statusCell.className = 'status unpaid';
+            }
+        }
+    </script>
+
+</body>
+
+</html>

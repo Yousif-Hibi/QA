@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>משחק כריית מטבעות עם בונוסים ואתגרים מורכבים</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        h1 {
+            color: #f39c12;
+        }
+        .miner {
+            background-color: #34495e;
+            padding: 20px;
+            border-radius: 10px;
+            width: 400px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 10px 0;
+        }
+        button:hover {
+            background-color: #2ecc71;
+        }
+        .coins {
+            margin-top: 20px;
+            font-size: 24px;
+            color: #f1c40f;
+        }
+        .result {
+            margin-top: 10px;
+            font-size: 18px;
+        }
+        .upgrade, .power-up {
+            background-color: #3498db;
+        }
+        button.upgrade:hover, button.power-up:hover {
+            background-color: #2980b9;
+        }
+        .challenge {
+            font-size: 20px;
+            margin-top: 20px;
+            color: #e74c3c;
+        }
+        .mining-animation {
+            display: none;
+            font-size: 40px;
+            margin-top: 20px;
+        }
+        .save-btn {
+            margin-top: 10px;
+            background-color: #8e44ad;
+        }
+        button.save-btn:hover {
+            background-color: #9b59b6;
+        }
+        .level {
+            margin-top: 20px;
+            font-size: 20px;
+            color: #e67e22;
+        }
+        .level-up {
+            color: #16a085;
+            font-size: 24px;
+            margin-top: 10px;
+        }
+        .power-up {
+            background-color: #e74c3c;
+        }
+        .bonus {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #9b59b6;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="miner">
+        <h1>מכונת כריית מטבעות עם בונוסים ואתגרים</h1>
+        <p>לחץ על הכפתור כדי לכרות מטבעות!</p>
+        <button onclick="mineCoins()">כרה מטבע</button>
+        <div class="coins">מטבעות: <span id="coin-count">0</span></div>
+        <div class="result" id="mine-result">מוכן לכרייה...</div>
+
+        <div class="mining-animation" id="mining-animation">⛏️ כורה...</div>
+
+        <div class="difficulty">
+            רמת קושי: <span id="difficulty-level">1</span> | זמן כרייה: <span id="mining-speed">2</span> שניות
+        </div>
+        <div class="level">שלב: <span id="level">1</span></div>
+        <div class="level-up" id="level-up-message"></div>
+
+        <button class="upgrade" onclick="upgradeMiner()">שדרג מכונת כרייה (עלות: 50 מטבעות)</button>
+        <button class="power-up" onclick="powerUp()">שדרג כוח כרייה (עלות: 100 מטבעות)</button>
+
+        <div class="challenge" id="challenge">האתגר הבא: צבור 100 מטבעות</div>
+        <button class="save-btn" onclick="saveProgress()">שמור משחק</button>
+        <div class="bonus" id="bonus-message"></div>
+    </div>
+
+    <script>
+        let coins = 0;
+        let difficulty = 1;
+        let miningSpeed = 2000;  // זמן כרייה (במילישניות)
+        let currentChallenge = 100;  // אתגר נוכחי
+        let level = 1;
+        let power = 1;  // כוח כרייה (משפיע על כמות המטבעות בכל כרייה)
+
+        // פונקציית טעינת נתוני משחק מהאחסון המקומי
+        window.onload = function() {
+            let savedCoins = localStorage.getItem('coins');
+            let savedDifficulty = localStorage.getItem('difficulty');
+            let savedMiningSpeed = localStorage.getItem('miningSpeed');
+            let savedChallenge = localStorage.getItem('challenge');
+            let savedLevel = localStorage.getItem('level');
+            let savedPower = localStorage.getItem('power');
+
+            if (savedCoins && savedDifficulty && savedMiningSpeed && savedChallenge && savedLevel && savedPower) {
+                coins = parseInt(savedCoins);
+                difficulty = parseInt(savedDifficulty);
+                miningSpeed = parseInt(savedMiningSpeed);
+                currentChallenge = parseInt(savedChallenge);
+                level = parseInt(savedLevel);
+                power = parseInt(savedPower);
+
+                document.getElementById('coin-count').textContent = coins;
+                document.getElementById('difficulty-level').textContent = difficulty;
+                document.getElementById('mining-speed').textContent = miningSpeed / 1000;
+                document.getElementById('challenge').textContent = `האתגר הבא: צבור ${currentChallenge} מטבעות`;
+                document.getElementById('level').textContent = level;
+            }
+        }
+
+        function mineCoins() {
+            document.getElementById('mine-result').textContent = "";
+            document.getElementById('mining-animation').style.display = "block";  // הצגת האנימציה
+
+            // הדמיית תהליך חישוב ה-Nonce (עם עיכוב לפי זמן כרייה)
+            setTimeout(() => {
+                document.getElementById('mining-animation').style.display = "none";  // הסתרת האנימציה
+                let nonce = Math.floor(Math.random() * 1000);
+                let reward = (Math.floor(Math.random() * 10 * difficulty) + 1) * power;  // תגמול רנדומלי שמתבסס על רמת הקושי והכוח
+                coins += reward;
+
+                // בדיקת בונוס רנדומלי
+                if (Math.random() < 0.2) {  // 20% סיכוי לקבל בונוס
+                    let bonus = Math.floor(Math.random() * 50) + 1;  // בונוס בין 1 ל-50 מטבעות
+                    coins += bonus;
+                    document.getElementById('bonus-message').textContent = `בונוס מיוחד! קיבלת ${bonus} מטבעות נוספים!`;
+                    setTimeout(() => document.getElementById('bonus-message').textContent = '', 3000);
+                }
+
+                document.getElementById('coin-count').textContent = coins;
+                document.getElementById('mine-result').textContent = `נמצא נונס: ${nonce} | הרווחת ${reward} מטבעות!`;
+
+                checkChallenge();  // בדיקת האתגר הנוכחי
+                checkLevelUp();  // בדיקת מעבר שלב
+            }, miningSpeed);
+        }
+
+        function upgradeMiner() {
+            if (coins >= 50) {
+                coins -= 50;
+                difficulty += 1;
+                miningSpeed = Math.max(miningSpeed - 200, 500);  // להקטין את הזמן (מקסימום מהירות של חצי שנייה)
+
+                document.getElementById('coin-count').textContent = coins;
+                document.getElementById('difficulty-level').textContent = difficulty;
+                document.getElementById('mining-speed').textContent = miningSpeed / 1000;
+
+                document.getElementById('mine-result').textContent = "שדרגת את מכונת הכרייה!";
+            } else {
+                document.getElementById('mine-result').textContent = "אין מספיק מטבעות לשדרוג!";
+            }
+        }
+
+        function powerUp() {
+            if (coins >= 100) {
+                coins -= 100;
+                power += 1;
+
+                document.getElementById('coin-count').textContent = coins;
+                document.getElementById('mine-result').textContent = "הכוח שלך שודרג!";
+            } else {
+                document.getElementById('mine-result').textContent = "אין מספיק מטבעות לשדרוג כוח!";
+            }
+        }
+
+        function checkChallenge() {
+            if (coins >= currentChallenge) {
+                document.getElementById('mine-result').textContent += ` | השלמת אתגר של ${currentChallenge} מטבעות!`;
+                currentChallenge += 100;  // אתגר הבא יגדל ב-100 מטבעות כל פעם
+
+                let reward = Math.floor(Math.random() * 5) + 1;  // תגמול בין 1 ל-5 כוח כרייה
+                power += reward;  // שדרוג כוח הכרייה כתוצאה מהשלמת אתגר
+                document.getElementById('challenge').textContent = `האתגר הבא: צבור ${currentChallenge} מטבעות (תגמול: ${reward} כוח)`;
+            }
+        }
+
+        function checkLevelUp() {
+            if (coins >= level * 500) {  // נדרשים 500 מטבעות לכל עליית שלב
+                level += 1;
+                document.getElementById('level').textContent = level;
+                document.getElementById('level-up-message').textContent = "עלית לשלב הבא!";
+                setTimeout(() => {
+                    document.getElementById('level-up-message').textContent = "";  // הסתרת הודעת השדרוג לאחר מספר שניות
+                }, 3000);
+            }
+        }
+
+        function saveProgress() {
+            localStorage.setItem('coins', coins);
+            localStorage.setItem('difficulty', difficulty);
+            localStorage.setItem('miningSpeed', miningSpeed);
+            localStorage.setItem('challenge', currentChallenge);
+            localStorage.setItem('level', level);
+            localStorage.setItem('power', power);
+            document.getElementById('mine-result').textContent = "המשחק נשמר בהצלחה!";
+            
+        }
+    </script>
+
+</body>
+</html>

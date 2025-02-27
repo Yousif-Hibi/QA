@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Invoice via Email</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f8ff;
+        }
+        .container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .container h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            font-size: 16px;
+            margin-bottom: 10px;
+            display: block;
+            color: #555;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+        }
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        .attachment-section {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .attachment-section input {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Send Invoice via Email</h2>
+
+        <!-- Buyer Details Section -->
+        <div class="form-group">
+            <label for="buyerEmail">Buyer's Email</label>
+            <input type="email" id="buyerEmail" placeholder="Enter buyer's email" required>
+        </div>
+
+        <!-- Email Subject and Message Section -->
+        <div class="form-group">
+            <label for="emailSubject">Email Subject</label>
+            <input type="text" id="emailSubject" placeholder="Enter email subject" value="Invoice for Your Payment">
+        </div>
+
+        <div class="form-group">
+            <label for="emailMessage">Email Message</label>
+            <textarea id="emailMessage" rows="6" placeholder="Enter a message to the buyer..."></textarea>
+        </div>
+
+        <!-- Attachment Section -->
+        <div class="attachment-section">
+            <label for="invoiceAttachment">Attach Invoice File</label>
+            <input type="file" id="invoiceAttachment" accept=".pdf, .docx, .txt">
+        </div>
+
+        <!-- Send Email Button -->
+        <div class="button-group">
+            <button class="btn" onclick="sendInvoice()">Send Email</button>
+        </div>
+    </div>
+
+    <script>
+        // Function to send invoice email (UI simulation)
+        function sendInvoice() {
+            const buyerEmail = document.getElementById('buyerEmail').value;
+            const emailSubject = document.getElementById('emailSubject').value;
+            const emailMessage = document.getElementById('emailMessage').value;
+            const invoiceAttachment = document.getElementById('invoiceAttachment').files[0];
+
+            if (!buyerEmail || !emailSubject || !emailMessage) {
+                alert("Please fill in all fields.");
+                return;
+            }
+
+            // Simulate sending email (on the front end, this could be an API call to a backend server)
+            alert(`Email sent to: ${buyerEmail}\nSubject: ${emailSubject}\nMessage: ${emailMessage}\nAttachment: ${invoiceAttachment ? invoiceAttachment.name : 'None'}`);
+
+            // Here, you would use an API to actually send the email to the buyer with the attachment
+            // Example: POST request to the backend API to send the email
+        }
+    </script>
+
+</body>
+</html>

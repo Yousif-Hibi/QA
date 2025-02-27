@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Lecturer</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f8ff;
+        }
+        .container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .container h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            font-size: 16px;
+            margin-bottom: 10px;
+            display: block;
+            color: #555;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        .form-group input:focus, .form-group select:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+        .submit-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+        .message {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Add Lecturer</h2>
+
+        <!-- Lecturer Details Form -->
+        <div class="form-group">
+            <label for="lecturerName">Lecturer Name</label>
+            <input type="text" id="lecturerName" placeholder="Enter lecturer's name">
+        </div>
+
+        <div class="form-group">
+            <label for="lecturerEmail">Lecturer Email</label>
+            <input type="email" id="lecturerEmail" placeholder="Enter lecturer's email">
+        </div>
+
+        <div class="form-group">
+            <label for="lecturerDegree">Academic Degree</label>
+            <input type="text" id="lecturerDegree" placeholder="Enter lecturer's academic degree">
+        </div>
+
+        <div class="form-group">
+            <label for="assignCourse">Assign to Course</label>
+            <select id="assignCourse">
+                <option value="">Select a course</option>
+                <option value="course1">Introduction to Computer Science</option>
+                <option value="course2">Data Structures and Algorithms</option>
+                <option value="course3">Web Development</option>
+            </select>
+        </div>
+
+        <button class="submit-btn" onclick="addLecturer()">Add Lecturer</button>
+
+        <!-- Message Area -->
+        <div id="message" class="message"></div>
+    </div>
+
+    <script>
+        // Function to add lecturer and display message
+        function addLecturer() {
+            const name = document.getElementById("lecturerName").value;
+            const email = document.getElementById("lecturerEmail").value;
+            const degree = document.getElementById("lecturerDegree").value;
+            const course = document.getElementById("assignCourse").value;
+            const messageDiv = document.getElementById("message");
+
+            if (name && email && degree && course) {
+                // Here you would typically send data to a backend API
+                // For now, we just simulate success
+                messageDiv.innerHTML = `Lecturer ${name} has been successfully added and assigned to ${getCourseName(course)}.`;
+                messageDiv.style.color = "#4CAF50"; // Green for success
+            } else {
+                messageDiv.innerHTML = "Please fill in all the fields.";
+                messageDiv.style.color = "#f44336"; // Red for error
+            }
+        }
+
+        // Helper function to get the course name from the course code
+        function getCourseName(courseCode) {
+            const courses = {
+                "course1": "Introduction to Computer Science",
+                "course2": "Data Structures and Algorithms",
+                "course3": "Web Development"
+            };
+            return courses[courseCode] || "Unknown Course";
+        }
+    </script>
+
+</body>
+</html>

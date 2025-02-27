@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="he">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>טופס הרשמה - תרגול Selenium</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+
+        form {
+            width: 300px;
+            margin: auto;
+        }
+
+        input,
+        button {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>טופס הרשמה</h2>
+    <form id="signup-form">
+        <input type="text" id="username" name="username" placeholder="שם משתמש" required>
+        <input type="password" id="password" name="password" placeholder="סיסמה" required>
+        <input type="email" id="email" name="email" placeholder="אימייל" required>
+        <button type="submit">הרשמה</button>
+    </form>
+
+    <h2>העלאת קובץ</h2>
+    <input type="file" id="file-upload">
+    <button onclick="uploadFile()">העלה קובץ</button>
+
+    <h2>הורדת קובץ</h2>
+    <button onclick="downloadFile()">הורד קובץ לדוגמה</button>
+
+    <script>
+        function uploadFile() {
+            const fileInput = document.getElementById('file-upload');
+            if (fileInput.files.length > 0) {
+                alert('✅ קובץ הועלה בהצלחה: ' + fileInput.files[0].name);
+            } else {
+                alert('⚠️ אנא בחר קובץ להעלאה.');
+            }
+        }
+
+        function downloadFile() {
+            const link = document.createElement('a');
+            link.href = 'data:text/plain;charset=utf-8,זוהי דוגמה לקובץ טקסט';
+            link.download = 'example.txt';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+
+</html>

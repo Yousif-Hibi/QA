@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Existing Lecturers</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .container h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        .lecturer-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .lecturer-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .lecturer-info {
+            font-size: 16px;
+            color: #333;
+        }
+        .course-name {
+            color: #2196F3;
+            font-weight: bold;
+        }
+        .edit-btn {
+            background-color: #FF9800;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+        .edit-btn:hover {
+            background-color: #e68900;
+        }
+        .update-form {
+            display: none;
+            margin-top: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            font-size: 16px;
+            margin-bottom: 10px;
+            display: block;
+            color: #555;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        .form-group input:focus, .form-group select:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+        .submit-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+        .cancel-btn {
+            background-color: #f44336;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .cancel-btn:hover {
+            background-color: #e53935;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Manage Existing Lecturers</h2>
+
+        <!-- List of Lecturers -->
+        <div id="lecturerList">
+            <!-- Lecturer Cards will appear here -->
+        </div>
+    </div>
+
+    <!-- Update Lecturer Form -->
+    <div class="container update-form" id="updateForm">
+        <h2>Update Lecturer</h2>
+        <div class="form-group">
+            <label for="updateLecturerName">Lecturer Name</label>
+            <input type="text" id="updateLecturerName" placeholder="Enter lecturer's name">
+        </div>
+
+        <div class="form-group">
+            <label for="updateLecturerEmail">Lecturer Email</label>
+            <input type="email" id="updateLecturerEmail" placeholder="Enter lecturer's email">
+        </div>
+
+        <div class="form-group">
+            <label for="updateLecturerDegree">Academic Degree</label>
+            <input type="text" id="updateLecturerDegree" placeholder="Enter lecturer's academic degree">
+        </div>
+
+        <div class="form-group">
+            <label for="updateAssignCourse">Assign to Course</label>
+            <select id="updateAssignCourse">
+                <option value="course1">Introduction to Computer Science</option>
+                <option value="course2">Data Structures and Algorithms</option>
+                <option value="course3">Web Development</option>
+            </select>
+        </div>
+
+        <button class="submit-btn" onclick="submitUpdateLecturer()">Update Lecturer</button>
+        <button class="cancel-btn" onclick="cancelUpdate()">Cancel</button>
+    </div>
+
+    <script>
+        // Sample data for existing lecturers (Simulated Database)
+        const lecturersData = [
+            { id: 1, name: "Alice Johnson", email: "alice@university.com", degree: "PhD", course: "course1" },
+            { id: 2, name: "Bob Smith", email: "bob@university.com", degree: "MSc", course: "course2" },
+            { id: 3, name: "Charlie Brown", email: "charlie@university.com", degree: "BSc", course: "course3" }
+        ];
+
+        let currentLecturerId = null;
+
+        // Display all lecturers
+        function displayLecturers() {
+            const lecturerListDiv = document.getElementById("lecturerList");
+            lecturerListDiv.innerHTML = ""; // Clear previous list
+
+            lecturersData.forEach(lecturer => {
+                const lecturerCard = document.createElement("div");
+                lecturerCard.classList.add("lecturer-card");
+
+                const lecturerInfo = document.createElement("div");
+                lecturerInfo.classList.add("lecturer-info");
+                lecturerInfo.innerHTML = `
+                    <strong>${lecturer.name}</strong><br>
+                    Email: ${lecturer.email}<br>
+                    Degree: ${lecturer.degree}<br>
+                    Course: <span class="course-name">${getCourseName(lecturer.course)}</span>
+                `;
+
+                const editBtn = document.createElement("button");
+                editBtn.classList.add("edit-btn");
+                editBtn.innerText = "Edit";
+                editBtn.onclick = () => editLecturer(lecturer.id);
+
+                lecturerCard.appendChild(lecturerInfo);
+                lecturerCard.appendChild(editBtn);
+                lecturerListDiv.appendChild(lecturerCard);
+            });
+        }
+
+        // Function to edit lecturer details
+        function editLecturer(id) {
+            const lecturer = lecturersData.find(lecturer => lecturer.id === id);
+
+            if (lecturer) {
+                document.getElementById("updateLecturerName").value = lecturer.name;
+                document.getElementById("updateLecturerEmail").value = lecturer.email;
+                document.getElementById("updateLecturerDegree").value = lecturer.degree;
+                document.getElementById("updateAssignCourse").value = lecturer.course;
+
+                document.getElementById("updateForm").style.display = "block";
+                currentLecturerId = id;
+            }
+        }
+
+        // Submit updated lecturer details
+        function submitUpdateLecturer() {
+            const name = document.getElementById("updateLecturerName").value;
+            const email = document.getElementById("updateLecturerEmail").value;
+            const degree = document.getElementById("updateLecturerDegree").value;
+            const course = document.getElementById("updateAssignCourse").value;
+
+            if (name && email && degree && course && currentLecturerId !== null) {
+                const lecturer = lecturersData.find(lecturer => lecturer.id === currentLecturerId);
+                lecturer.name = name;
+                lecturer.email = email;
+                lecturer.degree = degree;
+                lecturer.course = course;
+
+                cancelUpdate();
+                displayLecturers(); // Refresh the list
+            }
+        }
+
+        // Cancel the update and hide the form
+        function cancelUpdate() {
+            document.getElementById("updateForm").style.display = "none";
+            currentLecturerId = null;
+        }
+
+        // Helper function to get course name by course code
+        function getCourseName(courseCode) {
+            const courses = {
+                "course1": "Introduction to Computer Science",
+                "course2": "Data Structures and Algorithms",
+                "course3": "Web Development"
+            };
+            return courses[courseCode] || "Unknown Course";
+        }
+
+        // Initialize the page
+        window.onload = function() {
+            displayLecturers();
+        };
+    </script>
+
+</body>
+</html>

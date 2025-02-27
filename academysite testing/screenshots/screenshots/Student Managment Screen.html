@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f8ff;
+        }
+        .container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .container h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            font-size: 16px;
+            margin-bottom: 10px;
+            display: block;
+            color: #555;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        .form-group input:focus, .form-group select:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+        .search-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .search-btn:hover {
+            background-color: #45a049;
+        }
+        .students-list {
+            margin-top: 30px;
+            display: none;
+        }
+        .students-list h3 {
+            color: #333;
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .student-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .student-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .student-info {
+            font-size: 16px;
+            color: #333;
+        }
+        .course-name {
+            color: #2196F3;
+            font-weight: bold;
+        }
+        .no-students {
+            text-align: center;
+            color: #888;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Student Management</h2>
+
+        <!-- Search Form for Existing Students -->
+        <div class="form-group">
+            <label for="searchName">Search by Student Name</label>
+            <input type="text" id="searchName" placeholder="Enter student name">
+        </div>
+
+        <div class="form-group">
+            <label for="searchID">Search by Student ID</label>
+            <input type="text" id="searchID" placeholder="Enter student ID">
+        </div>
+
+        <div class="form-group">
+            <label for="searchCourse">Select Course</label>
+            <select id="searchCourse">
+                <option value="">Select a course</option>
+                <option value="course1">Introduction to Computer Science</option>
+                <option value="course2">Data Structures and Algorithms</option>
+                <option value="course3">Web Development</option>
+            </select>
+        </div>
+
+        <button class="search-btn" onclick="searchStudents()">Search</button>
+
+        <!-- List of Found Students -->
+        <div class="students-list" id="studentsList">
+            <h3>Matching Students</h3>
+            <div id="students"></div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data for existing students (Simulated Database)
+        const studentsData = [
+            { name: "Alice Johnson", id: "S001", course: "course1" },
+            { name: "Bob Smith", id: "S002", course: "course2" },
+            { name: "Charlie Brown", id: "S003", course: "course3" },
+            { name: "David Wilson", id: "S004", course: "course1" },
+            { name: "Emma Davis", id: "S005", course: "course2" },
+        ];
+
+        // Function to search and filter students based on the input criteria
+        function searchStudents() {
+            const name = document.getElementById("searchName").value.toLowerCase();
+            const studentID = document.getElementById("searchID").value.toLowerCase();
+            const course = document.getElementById("searchCourse").value;
+
+            // Filter students based on the input values
+            const filteredStudents = studentsData.filter(student => {
+                return (
+                    (name === "" || student.name.toLowerCase().includes(name)) &&
+                    (studentID === "" || student.id.toLowerCase().includes(studentID)) &&
+                    (course === "" || student.course === course)
+                );
+            });
+
+            // Display the results
+            const studentsListDiv = document.getElementById("studentsList");
+            const studentsDiv = document.getElementById("students");
+            studentsDiv.innerHTML = "";  // Clear previous results
+
+            if (filteredStudents.length > 0) {
+                filteredStudents.forEach(student => {
+                    const studentCard = document.createElement("div");
+                    studentCard.classList.add("student-card");
+
+                    const studentInfo = document.createElement("div");
+                    studentInfo.classList.add("student-info");
+                    studentInfo.innerHTML = `<strong>${student.name}</strong><br> ID: ${student.id} <br> Course: <span class="course-name">${getCourseName(student.course)}</span>`;
+
+                    studentCard.appendChild(studentInfo);
+                    studentsDiv.appendChild(studentCard);
+                });
+            } else {
+                studentsDiv.innerHTML = `<div class="no-students">No matching students found.</div>`;
+            }
+
+            // Show the list of matching students
+            studentsListDiv.style.display = "block";
+        }
+
+        // Helper function to get the course name from the course code
+        function getCourseName(courseCode) {
+            const courses = {
+                "course1": "Introduction to Computer Science",
+                "course2": "Data Structures and Algorithms",
+                "course3": "Web Development"
+            };
+            return courses[courseCode] || "Unknown Course";
+        }
+    </script>
+
+</body>
+</html>

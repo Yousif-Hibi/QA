@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Course</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            font-size: 16px;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .form-group textarea {
+            resize: vertical;
+        }
+        .form-group input[type="file"] {
+            padding: 5px;
+        }
+        .action-btn {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .action-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Create a New Course</h2>
+
+        <!-- Course Form -->
+        <form id="createCourseForm">
+
+            <!-- Course Name -->
+            <div class="form-group">
+                <label for="courseName">Course Name</label>
+                <input type="text" id="courseName" name="courseName" required placeholder="Enter the course name">
+            </div>
+
+            <!-- Course Description -->
+            <div class="form-group">
+                <label for="courseDescription">Course Description</label>
+                <textarea id="courseDescription" name="courseDescription" required rows="4" placeholder="Enter the course description"></textarea>
+            </div>
+
+            <!-- Prerequisites -->
+            <div class="form-group">
+                <label for="prerequisites">Prerequisites</label>
+                <textarea id="prerequisites" name="prerequisites" rows="2" placeholder="Enter prerequisites for the course (optional)"></textarea>
+            </div>
+
+            <!-- Lecturer -->
+            <div class="form-group">
+                <label for="lecturer">Select Lecturer</label>
+                <select id="lecturer" name="lecturer" required>
+                    <option value="">Select Lecturer</option>
+                    <option value="professor_john">Professor John</option>
+                    <option value="dr_smith">Dr. Smith</option>
+                    <option value="mr_doe">Mr. Doe</option>
+                    <!-- Add more lecturers here -->
+                </select>
+            </div>
+
+            <!-- Date and Time -->
+            <div class="form-group">
+                <label for="courseDate">Course Date</label>
+                <input type="date" id="courseDate" name="courseDate" required>
+            </div>
+            <div class="form-group">
+                <label for="courseTime">Course Time</label>
+                <input type="time" id="courseTime" name="courseTime" required>
+            </div>
+
+            <!-- Course Material Upload -->
+            <div class="form-group">
+                <label for="courseMaterial">Attach Course Materials</label>
+                <input type="file" id="courseMaterial" name="courseMaterial" accept=".pdf,.doc,.docx,.ppt,.pptx" />
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="action-btn">Create Course</button>
+
+        </form>
+    </div>
+
+    <script>
+        // Function to handle form submission
+        document.getElementById("createCourseForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            // Getting form data
+            const formData = new FormData(this);
+            
+            // Example: alert with the course details (you can replace this with an actual form submission to a backend)
+            alert("Course Created:\n" + 
+                  "Name: " + formData.get("courseName") + "\n" + 
+                  "Description: " + formData.get("courseDescription") + "\n" + 
+                  "Prerequisites: " + formData.get("prerequisites") + "\n" + 
+                  "Lecturer: " + formData.get("lecturer") + "\n" + 
+                  "Date: " + formData.get("courseDate") + "\n" + 
+                  "Time: " + formData.get("courseTime") + "\n" + 
+                  "Material: " + formData.get("courseMaterial").name);
+            
+            // You can now process the form data (submit to a server, etc.)
+        });
+    </script>
+
+</body>
+</html>

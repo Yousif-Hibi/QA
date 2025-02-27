@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Status Report</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        .chart-container {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Payment Status Report</h2>
+
+    <!-- Payment Status Table -->
+    <table>
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Payment Status</th>
+            </tr>
+        </thead>
+        <tbody id="paymentStatusTableBody">
+            <!-- Rows will be populated with JavaScript -->
+        </tbody>
+    </table>
+
+    <!-- Chart Container -->
+    <div class="chart-container">
+        <canvas id="paymentStatusChart"></canvas>
+    </div>
+</div>
+
+<script>
+    // Sample data of students and their payment status
+    const students = [
+        { name: 'John Doe', paymentStatus: 'Paid' },
+        { name: 'Jane Smith', paymentStatus: 'Pending' },
+        { name: 'Alice Johnson', paymentStatus: 'Unpaid' },
+        { name: 'Bob Brown', paymentStatus: 'Paid' },
+        { name: 'Chris Davis', paymentStatus: 'Pending' }
+    ];
+
+    // Populate the payment status table with data
+    const tableBody = document.getElementById('paymentStatusTableBody');
+    students.forEach(student => {
+        const row = `<tr>
+                        <td>${student.name}</td>
+                        <td>${student.paymentStatus}</td>
+                     </tr>`;
+        tableBody.innerHTML += row;
+    });
+
+    // Count the number of each payment status
+    const paymentCounts = {
+        'Paid': 0,
+        'Pending': 0,
+        'Unpaid': 0
+    };
+
+    students.forEach(student => {
+        paymentCounts[student.paymentStatus]++;
+    });
+
+    // Create a pie chart to show payment status distribution
+    const ctx = document.getElementById('paymentStatusChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Paid', 'Pending', 'Unpaid'],
+            datasets: [{
+                data: [paymentCounts['Paid'], paymentCounts['Pending'], paymentCounts['Unpaid']],
+                backgroundColor: ['rgba(54, 162, 235, 0.5)', 'rgba(255, 159, 64, 0.5)', 'rgba(255, 99, 132, 0.5)'],
+                borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 159, 64, 1)', 'rgba(255, 99, 132, 1)'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn {
+            background-color: #007bff;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .form-container {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .form-container input {
+            padding: 8px;
+            margin: 10px 0;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-container select {
+            padding: 8px;
+            margin: 10px 0;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>User Management</h2>
+
+    <!-- User List Table -->
+    <table>
+        <thead>
+            <tr>
+                <th>User Name</th>
+                <th>Role</th>
+                <th>Permissions</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="userList">
+            <!-- Users will be dynamically populated here -->
+        </tbody>
+    </table>
+
+    <!-- Update User Form -->
+    <div class="form-container" id="updateFormContainer" style="display: none;">
+        <h3>Update User Details</h3>
+        <form id="updateForm">
+            <input type="text" id="updateUsername" placeholder="Username" required>
+            <input type="email" id="updateEmail" placeholder="Email" required>
+            <select id="updateRole" required>
+                <option value="admin">Administrator</option>
+                <option value="lecturer">Lecturer</option>
+                <option value="student">Student</option>
+            </select>
+            <select id="updatePermissions" required>
+                <option value="read">Read</option>
+                <option value="write">Write</option>
+                <option value="admin">Admin</option>
+            </select>
+            <button type="submit" class="btn">Update</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Sample data for users
+    const users = [
+        { id: 1, username: 'JohnDoe', role: 'admin', permissions: 'write' },
+        { id: 2, username: 'JaneSmith', role: 'lecturer', permissions: 'read' },
+        { id: 3, username: 'AliceJohnson', role: 'student', permissions: 'read' },
+        { id: 4, username: 'BobBrown', role: 'lecturer', permissions: 'write' },
+    ];
+
+    // Function to populate the user list table
+    function populateUserList() {
+        const userList = document.getElementById('userList');
+        userList.innerHTML = '';
+        users.forEach(user => {
+            const row = `<tr>
+                            <td>${user.username}</td>
+                            <td>${user.role}</td>
+                            <td>${user.permissions}</td>
+                            <td>
+                                <button class="btn" onclick="updateUser(${user.id})">Update</button>
+                            </td>
+                         </tr>`;
+            userList.innerHTML += row;
+        });
+    }
+
+    // Function to open the update form for a specific user
+    function updateUser(userId) {
+        const user = users.find(user => user.id === userId);
+        if (user) {
+            document.getElementById('updateUsername').value = user.username;
+            document.getElementById('updateEmail').value = `${user.username}@example.com`;
+            document.getElementById('updateRole').value = user.role;
+            document.getElementById('updatePermissions').value = user.permissions;
+            document.getElementById('updateFormContainer').style.display = 'block';
+
+            // Handle form submission
+            document.getElementById('updateForm').onsubmit = function(event) {
+                event.preventDefault();
+                user.username = document.getElementById('updateUsername').value;
+                user.role = document.getElementById('updateRole').value;
+                user.permissions = document.getElementById('updatePermissions').value;
+                document.getElementById('updateFormContainer').style.display = 'none';
+                populateUserList(); // Update the user list
+            };
+        }
+    }
+
+    // Initial population of the user list
+    populateUserList();
+</script>
+
+</body>
+</html>

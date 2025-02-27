@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .search-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .search-container input, .search-container select {
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table th, table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        table th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .action-btn {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .action-btn:hover {
+            background-color: #45a049;
+        }
+        .view-btn {
+            background-color: #2196F3;
+        }
+        .view-btn:hover {
+            background-color: #1e88e5;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Student Management</h2>
+
+        <!-- Search and Filter Section -->
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search by Name or ID" onkeyup="filterStudents()">
+            <select id="filterCourse" onchange="filterStudents()">
+                <option value="">Filter by Course</option>
+                <option value="Computer Science">Computer Science</option>
+                <option value="Mechanical Engineering">Mechanical Engineering</option>
+                <option value="Electrical Engineering">Electrical Engineering</option>
+                <!-- Add more courses as needed -->
+            </select>
+        </div>
+
+        <!-- Students Table -->
+        <table id="studentsTable">
+            <thead>
+                <tr>
+                    <th>Student ID</th>
+                    <th>Full Name</th>
+                    <th>Course</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Example student data, this would be populated dynamically from the database -->
+                <tr>
+                    <td>1001</td>
+                    <td>John Doe</td>
+                    <td>Computer Science</td>
+                    <td>johndoe@example.com</td>
+                    <td>+123456789</td>
+                    <td>
+                        <button class="action-btn view-btn" onclick="viewDetails(1001)">View Details</button>
+                        <button class="action-btn" onclick="updateStudent(1001)">Update</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>1002</td>
+                    <td>Jane Smith</td>
+                    <td>Mechanical Engineering</td>
+                    <td>janesmith@example.com</td>
+                    <td>+987654321</td>
+                    <td>
+                        <button class="action-btn view-btn" onclick="viewDetails(1002)">View Details</button>
+                        <button class="action-btn" onclick="updateStudent(1002)">Update</button>
+                    </td>
+                </tr>
+                <!-- More rows as needed -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Sample function to filter the student list
+        function filterStudents() {
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            const filterCourse = document.getElementById('filterCourse').value;
+            const table = document.getElementById('studentsTable');
+            const rows = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName('td');
+                const name = cells[1].textContent.toLowerCase();
+                const studentId = cells[0].textContent.toLowerCase();
+                const course = cells[2].textContent;
+
+                // Hide the row if it doesn't match the search input or filter criteria
+                if (
+                    (name.includes(searchInput) || studentId.includes(searchInput)) &&
+                    (filterCourse === "" || course === filterCourse)
+                ) {
+                    rows[i].style.display = "";
+                } else {
+                    rows[i].style.display = "none";
+                }
+            }
+        }
+
+        // Function to handle "View Details" button click
+        function viewDetails(studentId) {
+            // Here you could open a modal or redirect to another page
+            alert("Viewing details for student ID: " + studentId);
+            // Example: redirect to a new page for student details
+            // window.location.href = `/student-details?id=${studentId}`;
+        }
+
+        // Function to handle "Update" button click
+        function updateStudent(studentId) {
+            // Here you would implement the update functionality
+            alert("Updating student ID: " + studentId);
+            // Example: redirect to a new page for student update
+            // window.location.href = `/update-student?id=${studentId}`;
+        }
+    </script>
+
+</body>
+</html>

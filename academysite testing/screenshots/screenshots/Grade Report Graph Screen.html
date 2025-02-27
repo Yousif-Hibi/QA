@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Average Grade Report</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        .chart-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Average Grade Report per Course</h2>
+
+    <!-- Student Grades Table -->
+    <table>
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Grade</th>
+            </tr>
+        </thead>
+        <tbody id="studentTableBody">
+            <!-- Rows will be populated with JavaScript -->
+        </tbody>
+    </table>
+
+    <!-- Chart Container -->
+    <div class="chart-container">
+        <canvas id="averageGradeChart"></canvas>
+    </div>
+</div>
+
+<script>
+    // Sample data of students and grades
+    const students = [
+        { name: 'John Doe', grade: 85 },
+        { name: 'Jane Smith', grade: 90 },
+        { name: 'Alice Johnson', grade: 78 },
+        { name: 'Bob Brown', grade: 88 },
+        { name: 'Chris Davis', grade: 92 }
+    ];
+
+    // Populate the student table with data
+    const tableBody = document.getElementById('studentTableBody');
+    let totalGrade = 0;
+
+    students.forEach(student => {
+        totalGrade += student.grade;
+        const row = `<tr>
+                        <td>${student.name}</td>
+                        <td>${student.grade}</td>
+                     </tr>`;
+        tableBody.innerHTML += row;
+    });
+
+    // Calculate average grade
+    const averageGrade = totalGrade / students.length;
+
+    // Prepare data for chart
+    const studentNames = students.map(student => student.name);
+    const studentGrades = students.map(student => student.grade);
+
+    // Create a bar chart showing individual student grades
+    const ctx = document.getElementById('averageGradeChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: studentNames, // Student names as labels
+            datasets: [{
+                label: 'Grade',
+                data: studentGrades, // Individual student grades
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100
+                }
+            },
+            responsive: true
+        }
+    });
+</script>
+
+</body>
+</html>

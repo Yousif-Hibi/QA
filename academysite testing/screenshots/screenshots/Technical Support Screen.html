@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technical Support</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .response {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #28a745;
+            text-align: center;
+        }
+        .error {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #dc3545;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Technical Support</h2>
+    
+    <form id="supportForm">
+        <label for="inquiry">Enter your technical inquiry:</label>
+        <textarea id="inquiry" name="inquiry" required></textarea>
+        
+        <button type="submit">Submit Inquiry</button>
+    </form>
+
+    <!-- Response Message Area -->
+    <div id="responseMessage" class="response" style="display: none;">
+        <p>Your inquiry has been submitted successfully. Our support team will assist you shortly.</p>
+    </div>
+    <div id="errorMessage" class="error" style="display: none;">
+        <p>There was an error submitting your inquiry. Please try again later.</p>
+    </div>
+</div>
+
+<script>
+    // Handle the form submission
+    document.getElementById('supportForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent page reload on form submit
+        
+        const inquiry = document.getElementById('inquiry').value;
+
+        // Validate input (check if there's text entered)
+        if (!inquiry.trim()) {
+            document.getElementById('errorMessage').style.display = 'block';
+            document.getElementById('responseMessage').style.display = 'none';
+            return;
+        }
+
+        // Simulate form submission (Here, you can make a real AJAX request to the server)
+        setTimeout(function() {
+            // If submission is successful, display success message
+            document.getElementById('responseMessage').style.display = 'block';
+            document.getElementById('errorMessage').style.display = 'none';
+
+            // Clear the textarea
+            document.getElementById('inquiry').value = '';
+        }, 1000);
+    });
+</script>
+
+</body>
+</html>
